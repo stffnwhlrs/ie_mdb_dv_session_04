@@ -177,120 +177,102 @@ ggparcoord(sample, columns=c(1,2,4,5,6), alphaLines=0.3)
 
 #Adding color as a visual encoding 
 ggparcoord(sample, columns=c(1,2,4,5,6), groupColumn=11, alphaLines=0.3) + 
-  scale_color_manual(values=c(color_1, color_2, color_3, color_4
+  scale_color_manual(values=c(color_1, color_2, color_3, color_4))
 
 #Adding color as a visual encoding + the x axis order
-ggparcoord(data, columns=c(1,2,4,5,6), groupColumn=11, alphaLines=0.3, order="anyClass") + 
-  scale_color_manual(values=c(color_1, color_2, color_3, color_4, color_5))
+ggparcoord(sample, columns=c(1,2,4,5,6), groupColumn=11, alphaLines=0.3, order="anyClass") + 
+  scale_color_manual(values=c(color_1, color_2, color_3, color_4))
 
 #Normalize univariately (substract mean & divide by sd)
-ggparcoord(data, columns=c(1,2,4,5,6), groupColumn=11, alphaLines=0.3, order="anyClass", scale="std") + 
-  scale_color_manual(values=c(color_1, color_2, color_3, color_4, color_5))
-
+ggparcoord(sample, columns=c(1,2,4,5,6), groupColumn=11, alphaLines=0.3, order="anyClass", scale="std") + 
+  scale_color_manual(values=c(color_1, color_2, color_3, color_4))
 
 #Standardize and center variables
-ggparcoord(data, columns=c(1,2,4,5,6), groupColumn=11, alphaLines=0.3, order="anyClass", scale="center") + 
-  scale_color_manual(values=c(color_1, color_2, color_3, color_4, color_5))
+ggparcoord(sample, columns=c(1,2,4,5,6), groupColumn=11, alphaLines=0.3, order="anyClass", scale="center") + 
+  scale_color_manual(values=c(color_1, color_2, color_3, color_4))
 
 # NO scaling
-ggparcoord(data, columns=c(1,2,4,5,6), groupColumn=11, alphaLines=0.3, order="anyClass", scale="globalminmax") + 
-  scale_color_manual(values=c(color_1, color_2, color_3, color_4, color_5))
+ggparcoord(sample, columns=c(1,2,4,5,6), groupColumn=11, alphaLines=0.3, order="anyClass", scale="globalminmax") + 
+  scale_color_manual(values=c(color_1, color_2, color_3, color_4))
+
+# NO scaling
+ggparcoord(sample, columns=c(1,2,4), groupColumn=11, alphaLines=0.3, order="anyClass", scale="globalminmax") + 
+  scale_color_manual(values=c(color_1, color_2, color_3, color_4))
 
 # Show points
-ggparcoord(data, columns=c(1,2,4,5,6), groupColumn=11, alphaLines=0.3, order="anyClass", showPoints=TRUE,  scale="globalminmax") + 
-  scale_color_manual(values=c(color_1, color_2, color_3, color_4, color_5))
+ggparcoord(sample, columns=c(1,2,4,5,6), groupColumn=11, alphaLines=0.3, order="anyClass", showPoints=TRUE,  scale="globalminmax") + 
+  scale_color_manual(values=c(color_1, color_2, color_3, color_4))
 
 #With spline factor 
-ggparcoord(data, columns=c(1,2,4,5,6), 
+ggparcoord(sample, columns=c(1,2,4,5,6), 
            groupColumn=11, alphaLines=0.3, 
            order="anyClass", 
-           #splineFactor = 5,  
+           splineFactor = 2,  
            showPoints=TRUE,  
-           scale="std") + 
-  scale_color_manual(values=c(color_1, color_2, color_3, color_4, color_5))
+           scale="globalminmax") + 
+  scale_color_manual(values=c(color_1, color_2, color_3, color_4))
+
+#With spline factor 
+ggparcoord(sample, columns=c(1,2,4), 
+           groupColumn=11, alphaLines=0.3, 
+           order="anyClass", 
+           splineFactor = 2,  
+           showPoints=TRUE,  
+           scale="globalminmax") + 
+  scale_color_manual(values=c(color_1, color_2, color_3, color_4))
 
 # very cheap
-ggparcoord(data, columns=c(1,2,4,5,6), 
+ggparcoord(sample, columns=c(1,2,4), 
            groupColumn=11, alphaLines=0.3, 
            order="anyClass", 
            #splineFactor = 5,  
            showPoints=TRUE,  
            scale="std") + 
-  scale_color_manual(values=c(color_1, color_6, color_6, color_6, color_6))
+  scale_color_manual(values=c("#FFC300", color_6, color_6, color_6))
+
+str(sample)
 
 # cheap
-ggparcoord(data, columns=c(1,2,4,5,6), 
+ggparcoord(sample, columns=c(1,2,4), 
            groupColumn=11, alphaLines=0.3, 
            order="anyClass", 
            #splineFactor = 5,  
            showPoints=TRUE,  
            scale="std") + 
-  scale_color_manual(values=c(color_6, color_2, color_6, color_6, color_6))
+  scale_color_manual(values=c(color_6, "#FFC300", color_6, color_6))
 
 
-# cheap
-ggparcoord(data, columns=c(1,2,4,5,6), 
-           groupColumn=11, alphaLines=0.3, 
-           order="anyClass", 
-           #splineFactor = 5,  
-           showPoints=TRUE,  
-           scale="std") + 
-  scale_color_manual(values=c(color_6, color_1, color_6, color_6, color_6))
-
-# normal
-ggparcoord(data, columns=c(1,2,4,5,6), 
-           groupColumn=11, alphaLines=0.3, 
-           order="anyClass", 
-           #splineFactor = 5,  
-           showPoints=TRUE,  
-           scale="std") + 
-  scale_color_manual(values=c(color_6, color_6, color_3, color_6, color_6))
-
-# normal
-ggparcoord(data, columns=c(1,2,4,5,6), 
-           groupColumn=11, alphaLines=0.3, 
-           order="anyClass", 
-           #splineFactor = 5,  
-           showPoints=TRUE,  
-           scale="std") + 
-  scale_color_manual(values=c(color_6, color_6, color_3, color_6, color_6))
 
 
 # expensive
-ggparcoord(data, columns=c(1,2,4,5,6), 
+ggparcoord(sample, columns=c(1,2,4), 
            groupColumn=11, alphaLines=0.3, 
            order="anyClass", 
            #splineFactor = 5,  
            showPoints=TRUE,  
            scale="std") + 
-  scale_color_manual(values=c(color_6, color_6, color_6, color_4, color_6))
-
+  scale_color_manual(values=c(color_6, color_6, "#FFC300", color_6))
 
 # very expensive
-ggparcoord(data, columns=c(1,2,4,5,6), 
+ggparcoord(sample, columns=c(1,2,4), 
            groupColumn=11, alphaLines=0.3, 
            order="anyClass", 
            #splineFactor = 5,  
            showPoints=TRUE,  
            scale="std") + 
-  scale_color_manual(values=c(color_6, color_6, color_6, color_6, color_1))
-
-
-
+  scale_color_manual(values=c(color_6, color_6, color_6, "#FFC300"))
 
 
 #Create a small multiple for easy pattern comparison
-ggparcoord(data, columns=c(1,2,4,5,6), 
+ggparcoord(sample, columns=c(1,2,4), 
            groupColumn=11, 
            alphaLines=0.3, 
            order="anyClass", 
            #splineFactor = 10,  
            #showPoints=TRUE,  
-           scale="std") + 
+           scale="globalminmax") + 
   scale_color_manual(values=c(color_1, color_2, color_3, color_4, color_5)) +
   facet_wrap(. ~ price_group, ncol=1)
-
-
 
 
 #Create a small multiple for easy pattern comparison
@@ -299,15 +281,6 @@ ggparcoord(iris, columns=1:4, groupColumn=5, order="anyClass",
   scale_color_manual(values=c("#478adb", "#f20675", "#1ce3cd")) +   
   facet_wrap(. ~ Species, ncol=1)
 
-str(data)
-
-table(data$price_group)
-
-?diamonds
-
-?cut
 
 # NEXT STEPS
-# - Equal binning / reduce binning
-# - check variables
 # - aesthetics
