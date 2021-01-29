@@ -178,10 +178,6 @@ ggparcoord(sample, columns=c(1,2,4,5,6), alphaLines=0.3)
 #Adding color as a visual encoding 
 ggparcoord(sample, columns=c(1,2,4,5,6), groupColumn=11, alphaLines=0.3) + 
   scale_color_manual(values=c(color_1, color_2, color_3, color_4
-                              ))
-
-table(data$cut)
-table(data$clarity)
 
 #Adding color as a visual encoding + the x axis order
 ggparcoord(data, columns=c(1,2,4,5,6), groupColumn=11, alphaLines=0.3, order="anyClass") + 
