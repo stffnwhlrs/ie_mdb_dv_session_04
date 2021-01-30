@@ -1,0 +1,177 @@
+---
+title: "PARALLEL COORDINATES IN R - Group G"
+output:
+  html_document:
+    df_print: paged
+---
+# Objective
+Dataset:
+Application to dataset: check if different price vategories have different specific values for the independent varfiables
+
+
+# Agenda
+
+
+
+# Prepare the environment
+First of all we load all the necessary packages and specify the theme as well some basic colors that we want to use.
+```{r}
+# TODO hide output in document
+library(ggplot2)
+library(ggthemes)
+library(GGally)
+library(ggdark)
+library(dplyr)
+
+#Defining the general colors to avoid hard coding  
+fill_color = '#111111'
+decoration_color = '#cccccc'
+main1_color = '#f20675'
+main2_color = '#1ce3cd'
+
+#Set dark theme for black background
+theme_set(dark_theme_gray())
+
+# colors for for values
+color_1 = "#478adb"
+color_2 = "#cccccc"
+color_3 = "#f20675"
+color_4 = "#bcc048"
+color_5 = "#1ce3cd"
+color_6 = "#878484"
+```
+
+# Inspecting the dataset & feature engineering
+First of all, we want to get a general idea about the structure, columns and some basic statistics.
+```{r}
+str(diamonds)
+```
+Cut and clarity are ordered from worst to best. Color is ordered from best to worst.
+```{r}
+summary(diamonds)
+```
+From all the variables, we can see that the price stands out more between the minimum and the maximum value. The 3rd quantile is only 20% of the whole price range. Therefore, we consider to have deeper look into it with a histogram.
+
+
+```{r}
+ggplot(diamonds, aes(price)) + 
+  geom_histogram(colour = "black", fill = "#01B8AA", binwidth =5000)
+par(new = TRUE) # merges the histogram and the boxplot
+boxplot(diamonds$price, horizontal = TRUE, axes = FALSE,
+        lwd = 2, col = rgb(0, 0, 0, alpha = 0.2), border=c("white"), ylim=c(0,18000))
+
+```
+When checking the histogram, we can observe a left skewed concentrating prices from 0-5000.
+This is confirmed from the boxplot that 75% of the data is within 2400-5300. This creates our bases for our price binning where we apply a three bin approach. Each bin should have the same sample size to make sure that we can find patterns and reduce biases.
+
+- 2401: median
+- 5324: 75% quartile
+- 18823: max
+
+```{r}
+breaks <- c(0,2401,5324,18823)
+# create labels
+tags <-c("cheap","normal", "expensive")
+
+```
+
+Our next step is to create a categorical price variable called `price_group`. This is our final target/dependent variable.
+
+```{r}
+data <- diamonds
+price_groups <- cut(data$price, breaks=breaks, include.lowest=TRUE, right=FALSE, labels=tags)
+# order factors
+price_groups <- factor(price_groups, levels=tags, ordered = TRUE)
+# add to dataset
+data$price_group <- price_groups
+table(data$price_group)
+```
+Looking at the actual dataset which includes over 53,000 rows our goal is to the reduce size and get the same number of rows for each price_group (200) in our final dataset (=`sample`).
+
+```{r}
+# prepare cheap
+data_cheap <- data %>% filter(price_group == "cheap")
+data_cheap_sample <- data_cheap[sample(nrow(data_cheap),200),]
+
+# prepare normal
+data_normal <- data %>% filter(price_group == "normal")
+data_normal_sample <- data_normal[sample(nrow(data_normal),200),]
+
+# prepare expensive
+data_expensive <- data %>% filter(price_group == "expensive")
+data_expensive_sample <- data_expensive[sample(nrow(data_expensive),200),]
+
+# combine the samples into one dataset
+sample <- rbind(data_cheap_sample, data_normal_sample, data_expensive_sample)
+table(sample$price_group)
+```
+
+
+
+# Exploratory Data Analysis
+As mentioned in out objective, we want to see if specific price groups have specific attributes. Out of the 8 variables, 4 relate to diamond sizes. To provide a more focused analysis, we have decided to drop these 5 because they are correlated to carat. We apply the remaining as parallel variables i.e. carat, ...
+
+
+
+
+```{r}
+# Inital graph
+ggparcoord(sample, columns=c(1,2,3,4), alphaLines=0.3)
+```
+In the chart above we cannot see clear clustering for any of the selected variables. Therefore we decided to apply visual encoding for the differen price groups.
+
+
+```{r}
+
+# NO scaling and added color as a visual encoding
+ggparcoord(sample, columns=c(1,2,3,4), groupColumn=11, alphaLines=0.3, order="anyClass", scale="globalminmax") + 
+  scale_color_manual(values=c(color_1, color_2, color_3, color_4))
+
+```
+From this chart we can see: 
+- Carat matters the most when it comes pricing
+- Expensive diamonds do not have poor cuts (cut is a ordered factor variable. Lowest number represents the lowest quality cut)
+- Clarity & color seem not to be important because of their distribution
+
+```{r}
+# Scaling and added color as a visual encoding
+ggparcoord(sample, columns=c(1,2,3,4), groupColumn=11, alphaLines=0.3,order="anyClass") + 
+  scale_color_manual(values=c(color_1, color_2, color_3, color_4))
+```
+The graph above uses an auto-scaling to remove different measurements which helps us to understand the characteristics of each price group better.
+
+The spline factor graph empathizes our findings but there are no additional information that we can derive from the chart.
+```{r}
+#With spline factor 
+ggparcoord(sample, columns=c(1,2,3,4), 
+           groupColumn=11, alphaLines=0.6, 
+           order="anyClass", 
+           splineFactor = 5,  
+           showPoints=TRUE,  
+           scale="std") + 
+  scale_color_manual(values=c(color_1, color_2, color_3, color_4))
+```
+```{r}
+
+```
+
+
+
+```{r}
+#Create a small multiple for easy pattern comparison
+ggparcoord(sample, columns=c(1,2,3,4), groupColumn=11, order="anyClass",
+           showPoints=TRUE, alphaLines=0.2, scale="std") + 
+  scale_color_manual(values=c(color_1,color_2,color_3,color_4)) +   
+  facet_wrap(. ~ price_group, ncol=1)
+```
+
+
+
+
+
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.

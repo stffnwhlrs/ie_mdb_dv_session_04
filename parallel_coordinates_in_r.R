@@ -281,6 +281,14 @@ ggparcoord(iris, columns=1:4, groupColumn=5, order="anyClass",
   scale_color_manual(values=c("#478adb", "#f20675", "#1ce3cd")) +   
   facet_wrap(. ~ Species, ncol=1)
 
+data <- diamonds
+
+ggplot(diamonds, aes(price)) + 
+  geom_histogram(colour = "black", fill = "#01B8AA", binwidth =5000)
+par(new = TRUE) # merges the histogram and the boxplot
+boxplot(diamonds$price, horizontal = TRUE, axes = FALSE,
+        lwd = 2, col = rgb(0, 0, 0, alpha = 0.2), border=c("white"), ylim=c(0,18000))
+
 
 # NEXT STEPS
 # - aesthetics
